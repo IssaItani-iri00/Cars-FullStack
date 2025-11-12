@@ -67,6 +67,33 @@ class CarController {
             echo ResponseService::response(200, $updatedCar->toArray());
         }
     }
+
+    function deleteCar(){
+        global $connection;
+
+        if(!isset($_GET["id"])){
+            echo ResponseService::response(400, "Enter ID first.");
+        }
+        else{
+            $id = $_GET["id"];
+            
+            $existingCar = Car::find($connection, $id);
+            
+            if(!$existingCar){
+                echo ResponseService::response(404, "No car exists with this ID!");
+                return;
+            }
+
+            $deleted = Car::delete($connection, $id);
+        
+             if($deleted){
+                echo ResponseService::response(200, "Car deleted successfully :)");
+            }
+            else{
+                echo ResponseService::response(500, "Failed to delete car :(");
+            }
+        }
+    }
 }
 
 ?>

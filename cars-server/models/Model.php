@@ -4,7 +4,7 @@ abstract class Model{
     protected static string $table;
     //protected static string $primary_key = "id";
 
-    public static function find(mysqli $connection, string $id, string $primary_key = "id"){
+    public static function find(mysqli $connection, int $id, string $primary_key = "id"){
         $sql = sprintf("SELECT * from %s WHERE %s = ?",
                        static::$table,
                        $primary_key);
@@ -49,15 +49,25 @@ abstract class Model{
         return static::find($connection, $id);
     }
 
-    public static function update(mysqli $connection, string $id, string $name, string $color){
+    public static function update(mysqli $connection, int $id, string $name, string $color){
         $sql = sprintf("UPDATE %s SET name = ?, color = ? WHERE id = ?", static::$table);
 
         $query = $connection->prepare($sql);
-        $query->bind_param("sssi", $name, $color, $id);
+        $query->bind_param("ssi", $name, $color, $id);
         $query->execute();
 
         return static::find($connection, $id);
 
+    }
+
+    public static function delete(mysqli $connection, int $id){
+        $sql = sprintf("DELETE FROM %s WHERE id = ?", static::$table);
+
+        $query = $connection->prepare($sql);
+        $query->bind_param("i", $id);
+        $query->execute();
+
+        return $query->affected_rows > 0;
     }
 
 
