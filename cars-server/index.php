@@ -15,7 +15,8 @@ if ($request == '') {
 //array of routes - a mapping between routes and controller name and method!
 //remove routes from here!! 
 $apis = [
-    '/cars'         => ['controller' => 'CarController', 'method' => 'getCarByID'],
+    '/cars{id}'         => ['controller' => 'CarController', 'method' => 'getCarByID'],
+    '/cars'         => ['controller' => 'CarController', 'method' => 'getCars'],
     '/users'         => ['controller' => 'UserController', 'method' => 'getUsers']
 ];
 
