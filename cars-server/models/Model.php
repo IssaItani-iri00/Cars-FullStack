@@ -36,6 +36,19 @@ abstract class Model{
         return $records;
     }
 
+    public static function create(mysqli $connection, string $name, string $year, string $color){
+        $sql = sprintf("INSERT INTO %s (name, year, color) VALUES (?, ?, ?)",
+                       static::$table);
+
+        $query = $connection->prepare($sql);
+        $query->bind_param("sss", $name, $year, $color);
+        $query->execute();               
+
+        $id = $connection->insert_id;
+
+        return static::find($connection, $id);
+    }
+
 }
 
 

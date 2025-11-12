@@ -5,27 +5,6 @@ require_once(__DIR__ . "/../services/ResponseService.php");
 
 class CarController {
 
-    function getCarByID(){
-        global $connection;
-
-        if(isset($_GET["id"])){
-            $id = $_GET["id"];
-        }else{
-            echo ResponseService::response(500, "ID is missing");
-            return;
-        }
-       
-        //not allowed to write logic in my controller!!!
-        //$car = Car::find($connection, $id);
-        //$car = $car ? $car->toArray() : [];
-        $car = CarService::findCarByID($id);
-        echo ResponseService::response(200, $car);
-        return;
-    }
-
-    //try catch 
-
-
     function getCars(){
         global $connection;
 
@@ -33,15 +12,34 @@ class CarController {
             $id = $_GET["id"];
             $car = Car::find($connection, $id);
             echo ResponseService::response(200, $car->toArray());
-        }else{
+        }
+        else{
             $cars = Car::findAll($connection);
             $carsArray = [];
             foreach($cars as $car){
             $carsArray[] = $car->toArray();
         }
         echo ResponseService::response(200, $carsArray);
+        }
     }
-}
+    
+    function addCar(){
+        global $connection;
+
+        if(!isset($_POST["name"]) || !isset($_POST["year"]) || !isset($_POST["color"])){
+            echo ResponseService::response(400, "Enter all the fields");
+        }
+        else{
+            $name = $_POST["name"];
+            $year = $_POST["year"];
+            $color = $_POST["color"];
+            
+            $newCar = Car::create($connection, $name, $year, $color);
+            
+            echo ResponseService::response(201, $newCar->toArray());
+        }
+
+    }
 }
 
 ?>
