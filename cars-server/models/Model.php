@@ -49,6 +49,18 @@ abstract class Model{
         return static::find($connection, $id);
     }
 
+    public static function update(mysqli $connection, string $id, string $name, string $color){
+        $sql = sprintf("UPDATE %s SET name = ?, color = ? WHERE id = ?", static::$table);
+
+        $query = $connection->prepare($sql);
+        $query->bind_param("sssi", $name, $color, $id);
+        $query->execute();
+
+        return static::find($connection, $id);
+
+    }
+
+
 }
 
 

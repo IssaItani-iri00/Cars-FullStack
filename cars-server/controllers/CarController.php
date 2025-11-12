@@ -38,7 +38,34 @@ class CarController {
             
             echo ResponseService::response(201, $newCar->toArray());
         }
+    }
 
+    function updateCar(){
+        global $connection;
+
+        if(!isset($_POST["id"])){
+            echo ResponseService::response(400, "Enter ID first.");
+        }
+        if(isset($_POST["year"])){
+            echo ResponseService::response(400, "You can't edit a cars' year!");
+        }
+        else{
+            $id = $_POST["id"];
+            
+            $existingCar = Car::find($connection, $id);
+            
+            if(!$existingCar){
+                echo ResponseService::response(404, "No car exists with this ID!");
+                return;
+            }
+            
+            $name = isset($_POST["name"]) ? $_POST["name"] : $existingCar->getName();
+            $color = isset($_POST["color"]) ? $_POST["color"] : $existingCar->getColor();
+            
+            $updatedCar = Car::update($connection, $id, $name, $color);
+            
+            echo ResponseService::response(200, $updatedCar->toArray());
+        }
     }
 }
 
